@@ -16,7 +16,7 @@ import javax.validation.constraints.Pattern;
 public class CreateUserRequestDto {
 
     @NotNull(message = "Username cannot be null and unique")
-    @Pattern(regexp = "^[A-Za-z0-9_]{3,20}", message = "Invalid userName")
+    @Pattern(regexp = "^[A-Za-z0-9-]{3,20}", message = "Invalid userName")
     @JsonProperty("username")
     private String username;
 
