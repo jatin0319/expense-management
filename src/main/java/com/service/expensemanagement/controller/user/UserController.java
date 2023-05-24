@@ -45,12 +45,9 @@ public class UserController {
     @ApiOperation(value = "Api to get list of users")
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<UserListResponseDto>> getUserList(@RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
-                                                                 @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-                                                                 @RequestParam(value = "sort", defaultValue = "firstName", required = false) String sort,
-                                                                 @RequestParam(value = "search", defaultValue = "", required = false) String search,
-                                                                 @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
+                                                                 @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber) {
         List<UserListResponseDto> userListResponse =
-                userService.getUserList(pageNumber, pageSize, search, sort, sortDir, FETCH_USER_DETAILS_LIST);
+                userService.getUserList(pageNumber, pageSize, FETCH_USER_DETAILS_LIST);
         return new ResponseEntity<>(userListResponse, HttpStatus.OK);
     }
 

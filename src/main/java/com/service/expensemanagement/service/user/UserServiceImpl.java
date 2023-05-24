@@ -8,6 +8,7 @@ import com.service.expensemanagement.models.Group;
 import com.service.expensemanagement.models.User;
 import com.service.expensemanagement.models.UserToGroupMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -88,14 +89,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserListResponseDto> getUserList(Integer pageNumber, Integer pageSize, String search, String sort,
-                                                 String sortDir, String operation) {
-        this.validateQueryParameter(pageNumber, pageSize, search, sortDir);
+    public List<UserListResponseDto> getUserList(Integer pageNumber, Integer pageSize, String operation) {
+        this.validateQueryParameter(pageNumber, pageSize);
         List<UserListResponseDto> userListResponse = new ArrayList<>();
-        Sort sortBy = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sort).ascending() : Sort.by(sort).descending() ;
 
-        Pageable pagination = PageRequest.of(pageNumber, pageSize, sortBy);
-        List<User> userList =userRepository.findByFirstNameContainingOrLastNameContaining(search, search,pagination);
+        Pageable pagination = PageRequest.of(pageNumber, pageSize);
+        Page<User> userList = userRepository.findAll(pagination);
         userList.forEach(user -> {
             userListResponse.add(UserListResponseDto.builder()
                     .firstName(user.getFirstName())
@@ -109,6 +108,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<GroupListResponseDto> getGroupList(Integer pageNumber, Integer pageSize, String username, String fetchGroupDetailsList) {
         List<GroupListResponseDto> groupListResponse = new ArrayList<>();
+        this.validateQueryParameter(pageNumber, pageSize);
         Pageable pagination = PageRequest.of(pageNumber, pageSize);
 
         User user = userRepository.findByUsername(username)
@@ -125,14 +125,11 @@ public class UserServiceImpl implements UserService {
         return groupListResponse;
     }
 
-    private void validateQueryParameter(Integer pageNumber, Integer pageSize, String search, String sortDir){
+    private void validateQueryParameter(Integer pageNumber, Integer pageSize){
         if (pageNumber <0 || pageNumber >999)
             throw new RuntimeException("Invalid page number");
 
         if (pageSize <0 || pageSize >999)
             throw new RuntimeException("Invalid page size");
-
-        if (!sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) && !sortDir.equalsIgnoreCase(Sort.Direction.DESC.name()) )
-            throw new RuntimeException("Invalid sort direction");
     }
 }

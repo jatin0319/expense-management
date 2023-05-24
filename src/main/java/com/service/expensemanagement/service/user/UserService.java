@@ -9,8 +9,7 @@ public interface UserService {
 
     CreateUserResponseDto createUserDetails(CreateUserRequestDto createUserRequest, String operation);
 
-    List<UserListResponseDto> getUserList(Integer pageNumber, Integer pageSize, String search, String sort,
-                                          String sortDir, String operation);
+    List<UserListResponseDto> getUserList(Integer pageNumber, Integer pageSize, String operation);
 
     List<GroupListResponseDto> getGroupList(Integer pageNumber, Integer pageSize,
                                             String username, String fetchGroupDetailsList);
